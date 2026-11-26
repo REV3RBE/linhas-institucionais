@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Linhas Institucionais</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+<style>
+  /* Painel escuro monocromático numa tela só (sem rolagem) no computador, escalado pela altura da tela e
+     centralizado em telas ultrawide; luz de fundo fixa cobrindo a janela inteira. No celular, cartões empilhados. */
+  :root {
+    --bg: #050505; --shell: rgba(11, 11, 11, .86); --card: #111111; --card-2: #0d0d0d; --tile: #181818; --tile-2: #1f1f1f;
+    --line: #232323; --line-2: #2e2e2e; --wire: #3a3a3a;
+    --fg: #f2f2f2; --muted: #8a8a8a; --faint: #555555; --white: #ffffff; --ink: #0a0a0a;
+    --up: #5ee08f; --up-bg: rgba(94, 224, 143, .12); --down: #ff6b6b; --down-bg: rgba(255, 107, 107, .12);
+    --warn: #f5c451; --warn-bg: rgba(245, 196, 81, .1); --blue: #6ea8ff;
+    --font: "Inter", "Segoe UI", system-ui, sans-serif;
+    --gap: 1rem;
+    color-scheme: dark;
+  }
+  /* Escala única: 1rem acompanha a altura da tela (e a largura, quando ela é o limite). 720p ≈ 11px, 1080p ≈ 16px, 4K ≈ 32px. */
+  html { font-size: clamp(11px, min(1.5dvh, .86vw), 40px); height: 100%; scrollbar-width: none; }
+  html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100%; background: var(--bg); color: var(--fg); font: 400 1rem/1.45 var(--font);
+         font-variant-numeric: tabular-nums; overflow: hidden; -webkit-font-smoothing: antialiased; }
+  /* Degradê de fundo (grafite claro no alto à esquerda até preto embaixo à direita, com um reflexo diagonal):
+     fixo e do tamanho da janela, então preenche qualquer proporção sem cortes. */
+  body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 65% 55% at 85% 0%, rgba(255, 255, 255, .09), transparent 70%),
+      linear-gradient(118deg, transparent 38%, rgba(255, 255, 255, .045) 50%, transparent 62%),
+      linear-gradient(155deg, #3a3a3a 0%, #222222 22%, #111111 48%, #070707 72%, #000000 100%); }
+
+  .app { position: relative; z-index: 1; height: 100dvh; width: 100%; max-width: calc(100dvh * 2.15); margin: 0 auto; padding: 1.1rem 1.5rem; }
+  .shell { height: 100%; display: flex; flex-direction: column; gap: var(--gap); min-height: 0;
+           background: linear-gradient(155deg, rgba(58, 58, 58, .55) 0%, rgba(24, 24, 24, .62) 30%, rgba(8, 8, 8, .78) 65%, rgba(0, 0, 0, .9) 100%);
+           -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid #2a2a2a; border-radius: 1.6rem; padding: 1.1rem 1.6rem 1rem;
+           box-shadow: 0 2rem 5rem rgba(0, 0, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .04); }
+
+  /* Barra do topo */
+  .top { flex: none; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; }
+  .brand { display: flex; align-items: center; gap: .6rem; font-weight: 700; font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; }
+  .brand svg { width: 1.9rem; height: 1.9rem; flex: none; }
+  .nav { display: flex; gap: .25rem; background: var(--card-2); border: 1px solid var(--line); border-radius: 99rem; padding: .25rem; }
+  .nav a { font-size: .78rem; color: var(--muted); text-decoration: none; padding: .42rem 1rem; border-radius: 99rem; white-space: nowrap; }
+  .nav a:hover { color: var(--fg); }
+  .nav a.on { background: var(--white); color: var(--ink); font-weight: 600; }
+  .user { justify-self: end; display: flex; align-items: center; gap: .6rem; }
+  .ico { width: 2.3rem; height: 2.3rem; border-radius: 50%; display: grid; place-items: center; background: var(--card-2); border: 1px solid var(--line); color: var(--muted); }
+  .ico svg { width: 1rem; height: 1rem; }
+  .status { display: flex; align-items: center; gap: .6rem; background: var(--card-2); border: 1px solid var(--line); border-radius: 99rem; padding: .25rem .9rem .25rem .25rem; }
+  .avatar { position: relative; width: 2.1rem; height: 2.1rem; border-radius: 50%; background: linear-gradient(145deg, #3a3a3a, #161616);
+            display: grid; place-items: center; font-size: .6rem; font-weight: 700; letter-spacing: .04em; flex: none; }
+  .avatar .dot { position: absolute; right: -.05rem; bottom: -.05rem; width: .62rem; height: .62rem; border-radius: 50%; background: var(--faint); border: 2px solid var(--card-2); }
+  .dot.ok { background: var(--up); } .dot.warn { background: var(--warn); } .dot.err { background: var(--down); }
+  .user, .status, .status-txt { min-width: 0; }
+  .status { max-width: 100%; }
+  .status-txt { display: grid; line-height: 1.25; }
+  .status-txt b, .status-txt small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .status-txt b { font-size: .74rem; font-weight: 600; }
+  .status-txt small { font-size: .64rem; color: var(--muted); }
+
+  /* Título da página */
+  .head { flex: none; display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+  .head h1 { margin: 0; font-size: 1.35rem; font-weight: 600; letter-spacing: -.01em; }
+  .head p { margin: .15rem 0 0; font-size: .76rem; color: var(--muted); }
+  .head .acoes { margin-left: auto; display: flex; gap: .5rem; align-items: center; }
+  .pill { font: 500 .74rem var(--font); border-radius: 99rem; padding: .5rem 1rem; border: 1px solid var(--line-2); background: var(--card-2); color: var(--fg);
+          display: inline-flex; align-items: center; gap: .45rem; white-space: nowrap; }
+  .pill svg { width: .85rem; height: .85rem; }
+  .btn { cursor: pointer; background: var(--white); color: var(--ink); border-color: var(--white); font-weight: 600; }
+  .btn:hover { background: #dcdcdc; }
+  .btn:focus-visible, a:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+
+  .aviso { flex: none; border-radius: .8rem; padding: .6rem 1rem; font-size: .8rem; }
+  .aviso.warn { background: var(--warn-bg); color: var(--warn); border: 1px solid rgba(245, 196, 81, .22); }
+  .aviso.err { background: var(--down-bg); color: var(--down); border: 1px solid rgba(255, 107, 107, .28); }
+
+  /* Cartões */
+  .card { background: linear-gradient(180deg, var(--card), var(--card-2)); border: 1px solid var(--line); border-radius: 1.1rem; padding: 1rem 1.1rem;
+          min-width: 0; min-height: 0; position: relative; transition: border-color .3s; }
+  .card.foco { border-color: #6a6a6a; }
+  .c-title { font-size: .76rem; color: var(--muted); margin: 0; font-weight: 500; }
+  .c-title b { color: var(--fg); font-weight: 500; }
+  .chip { display: inline-flex; align-items: center; gap: .25rem; font-size: .68rem; font-weight: 600; border-radius: 99rem; padding: .15rem .5rem;
+          background: var(--tile-2); color: var(--fg); border: 1px solid var(--line-2); white-space: nowrap; }
+  .chip.up { color: var(--up); background: var(--up-bg); border-color: transparent; }
+  .chip.down { color: var(--down); background: var(--down-bg); border-color: transparent; }
+
+  .kpis { flex: none; height: 20rem; display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.7fr) minmax(0, 1.1fr) minmax(0, 1.1fr); gap: var(--gap); }
+  .stack { display: grid; grid-template-rows: 1fr 1fr; gap: var(--gap); min-height: 0; }
+  .mini { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 0 .6rem; }
+  .mini .c-title { grid-column: 1 / -1; }
+  .mini .num { align-self: end; display: grid; gap: .3rem; justify-items: start; }
+  .mini .num strong { font-size: 1.85rem; font-weight: 500; letter-spacing: -.02em; line-height: 1; }
+  .mini .sub { font-size: .64rem; color: var(--faint); white-space: nowrap; }
+  .mini svg { align-self: end; width: 100%; height: 72%; display: block; }
+  .marca { display: inline-block; width: .5rem; height: .5rem; border-radius: .15rem; margin-right: .35rem; vertical-align: .05rem; }
+  .m-up { background: var(--up); } .m-down { background: var(--down); } .m-white { background: var(--white); } .m-blue { background: var(--blue); }
+  .m-warn { background: var(--warn); } .m-gray { background: var(--faint); }
+
+  .k-faixa { display: flex; flex-direction: column; }
+  .k-faixa .linha1 { display: flex; align-items: flex-start; gap: 1rem; flex: none; }
+  .k-faixa .big { display: flex; align-items: baseline; gap: .6rem; margin-top: .45rem; flex-wrap: wrap; }
+  .k-faixa .big strong { font-size: 2.3rem; font-weight: 500; letter-spacing: -.03em; line-height: 1; }
+  .k-faixa .sub { font-size: .66rem; color: var(--faint); margin-top: .3rem; }
+  .ontem { margin-left: auto; text-align: right; display: grid; gap: .1rem; }
+  .ontem small { font-size: .64rem; color: var(--muted); }
+  .ontem b { font-size: 1.05rem; font-weight: 500; }
+  .ontem span { font-size: .6rem; color: var(--faint); }
+  .chart-wrap { position: relative; flex: 1; min-height: 0; margin-top: .4rem; }
+  .chart-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .tip { position: absolute; top: 0; transform: translateX(-50%); background: rgba(20, 20, 20, .94); border: 1px solid var(--line-2);
+         border-radius: .6rem; padding: .3rem .55rem; white-space: nowrap; box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .6); pointer-events: none;
+         display: flex; align-items: center; gap: .4rem; font-size: .66rem; color: var(--muted); }
+  .tip b { font-size: .8rem; color: var(--fg); font-weight: 600; }
+  .tip[hidden] { display: none; }
+
+  .donut { display: flex; flex-direction: column; }
+  .donut .c-title { flex: none; }
+  .donut svg { flex: 1; min-height: 0; width: 100%; display: block; margin: .3rem 0; }
+  .legenda { flex: none; display: grid; gap: .3rem; }
+  .legenda div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: baseline; font-size: .7rem; color: var(--muted); }
+  .legenda b { color: var(--fg); font-weight: 600; font-size: .78rem; }
+  .legenda .info { grid-column: 1 / -1; font-size: .58rem; color: var(--faint); margin-top: -.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Fluxo dos níveis */
+  .fluxo { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .fluxo-head { flex: none; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .fluxo-head h2 { margin: 0; font-size: .9rem; font-weight: 600; }
+  .fluxo-head .trava { margin-left: auto; font-size: .62rem; color: var(--faint); letter-spacing: .06em; text-transform: uppercase; display: flex; align-items: center; gap: .35rem; }
+  .fluxo-head .trava svg { width: .75rem; height: .75rem; }
+  .cols-head { flex: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 4.5rem; margin-top: .8rem;
+               border-top: 1px solid var(--line); padding-top: .55rem; }
+  .cols-head span { font-size: .66rem; color: var(--faint); }
+  .fluxo-body { position: relative; flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 4.5rem; padding-top: .4rem; }
+  .fluxo-body > svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .fcol { position: relative; display: flex; flex-direction: column; justify-content: space-around; gap: .45rem; min-width: 0; }
+  .node { display: flex; align-items: center; gap: .5rem; background: var(--tile); border: 1px solid var(--line-2); border-radius: .6rem;
+          padding: .42rem .45rem .42rem .65rem; font-size: .74rem; min-width: 0; box-shadow: 0 .4rem 1rem rgba(0, 0, 0, .35); }
+  .node .nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .node .nm small { color: var(--faint); font-size: .6rem; margin-left: .3rem; }
+  .node .v { font-weight: 600; font-size: .74rem; background: var(--card-2); border: 1px solid var(--line-2); border-radius: .4rem; padding: .12rem .45rem; white-space: nowrap; }
+  .node.forte { background: var(--tile-2); border-color: #3c3c3c; }
+  .node.forte .v { background: var(--white); color: var(--ink); border-color: var(--white); }
+
+  .fonte { flex: none; margin: 0; font-size: .64rem; color: var(--faint); line-height: 1.55; }
+  .fonte a { color: var(--muted); }
+
+  /* Celular, tablet em pé e janelas baixas: cartões empilhados e rolagem normal (sem barra visível). */
+  @media (max-width: 900px), (max-height: 520px) {
+    html { font-size: clamp(14px, 3.9vw, 16px); }
+    body { overflow-y: auto; }
+    .app { height: auto; max-width: none; padding: .75rem max(.75rem, env(safe-area-inset-right, 0px)) 1.25rem max(.75rem, env(safe-area-inset-left, 0px)); }
+    .shell { height: auto; padding: 1rem; border-radius: 1.3rem; }
+    .top { grid-template-columns: auto minmax(0, 1fr); }
+    .nav { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; min-width: 0; }
+    .nav a { flex: 1 1 0; min-width: 0; text-align: center; padding: .42rem .2rem; font-size: .74rem; overflow: hidden; text-overflow: ellipsis; }
+    .shell { overflow: hidden; }
+    .status { border-radius: 1.2rem; }
+    .status-txt b { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .user .ico { display: none; }
+    .kpis { height: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .stack { grid-column: 1 / -1; grid-template-rows: none; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .mini { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 2.2rem; gap: .35rem; }
+    .mini svg { height: 100%; }
+    .k-faixa { grid-column: 1 / -1; }
+    .chart-wrap { flex: none; height: 14rem; }
+    .donut svg { flex: none; height: 9.5rem; }
+    .cols-head { display: none; }
+    .fluxo-body { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1rem .75rem; }
+    .fluxo-body > svg { display: none; }
+    .fcol::before { content: attr(data-t); font-size: .66rem; color: var(--faint); border-top: 1px solid var(--line); padding-top: .4rem; }
+    .fcol { justify-content: flex-start; }
+  }
+  @media (max-width: 560px) {
+    .brand span { display: none; }
+    .head .acoes { margin-left: 0; width: 100%; }
+    .head .acoes .btn { margin-left: auto; }
+    .mini .num strong { font-size: 1.5rem; }
+    .k-faixa .big strong { font-size: 2rem; }
+    .donut { padding: .85rem; }
+    .fluxo-body { grid-template-columns: minmax(0, 1fr); }
+  }
+  /* Acréscimos das Linhas Institucionais */
+  .regra { flex: none; display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; border-radius: .8rem; padding: .55rem 1rem; font-size: .76rem;
+           background: var(--card-2); border: 1px solid var(--line); color: var(--muted); }
+  .regra b { color: var(--fg); font-weight: 600; }
+  .regra .passo { display: inline-flex; align-items: center; gap: .45rem; }
+  .regra .n { width: 1.25rem; height: 1.25rem; border-radius: 50%; display: grid; place-items: center; background: var(--white); color: var(--ink); font-size: .62rem; font-weight: 700; flex: none; }
+  .fcol { gap: .35rem; }
+  .node { padding: .34rem .45rem .34rem .65rem; }
+  @media (max-width: 900px), (max-height: 520px) { .regra { font-size: .8rem; flex-direction: column; align-items: flex-start; } .mini .sub { white-space: normal; } }
+</style>
+</head>
+<body>
+<div class="app">
+ <div class="shell">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="1" width="28" height="28" rx="8" fill="#1c1c1c" stroke="#333"/>
+        <path d="M7 10 H23 M7 20 H23" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M9 17 L13 12 L17 16 L21 11" fill="none" stroke="#8a8a8a" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Linhas</span>
+    </div>
+    <nav class="nav" aria-label="Seções">
+      <a href="#c-painel" class="on">Painel</a>
+      <a href="#c-faixa">Linhas</a>
+      <a href="#c-taxa">Volatilidade</a>
+      <a href="#c-fluxo">Fluxo</a>
+    </nav>
+    <div class="user">
+      <div class="status" id="status">
+        <span class="avatar">WIN<i class="dot" id="railDot"></i></span>
+        <span class="status-txt"><b id="statusTxt">Sem coleta</b><small>Mini Índice · B3</small></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="head" id="c-painel">
+    <div>
+      <h1>Linhas institucionais de hoje</h1>
+      <p>Linha de venda (resistência) e de compra (suporte) do Mini Índice, com stop, calculadas com o boletim da B3 antes da abertura.</p>
+    </div>
+    <div class="acoes">
+      <span class="pill"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3"/></svg><span id="hoje"></span></span>
+      <button class="pill btn" id="copiar" type="button">Copiar linhas</button>
+    </div>
+  </div>
+
+  <div id="aviso" class="aviso" hidden></div>
+
+  <div class="regra" id="regra">
+    <span class="passo"><span class="n">1</span><span>Antes das 9h: <b>venda limitada</b> na linha de cima e <b>compra limitada</b> na de baixo, cada uma com seu <b>stop na plataforma</b>.</span></span>
+    <span class="passo"><span class="n">2</span><span>Às 9h: abriu <b>acima</b> de <b id="rCentro1">—</b> → cancele a venda · abriu <b>abaixo</b> → cancele a compra.</span></span>
+    <span class="passo"><span class="n">3</span><span>Sem alvo: <b>zere no fim do pregão</b>. Depois de um stop, não reentre.</span></span>
+  </div>
+
+  <div class="kpis">
+    <div class="stack">
+      <section class="card mini" aria-label="Linha de venda">
+        <p class="c-title"><span class="marca m-down"></span>Venda · resistência</p>
+        <div class="num"><strong id="venda">—</strong><span class="chip down" id="vendaC"></span><span class="sub" id="vendaT"></span></div>
+        <svg id="sparkMax" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </section>
+      <section class="card mini" aria-label="Linha de compra">
+        <p class="c-title"><span class="marca m-up"></span>Compra · suporte</p>
+        <div class="num"><strong id="compra">—</strong><span class="chip up" id="compraC"></span><span class="sub" id="compraT"></span></div>
+        <svg id="sparkMin" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </section>
+    </div>
+
+    <section class="card k-faixa" id="c-faixa" aria-labelledby="t-centro">
+      <div class="linha1">
+        <div>
+          <p class="c-title" id="t-centro">Centro · fechamento do último pregão</p>
+          <div class="big"><strong id="centro">—</strong><span class="chip" id="sigChip"></span></div>
+          <div class="sub" id="centroT"></div>
+        </div>
+        <div class="ontem"><small>Contrato vigente</small><b id="contrato">—</b><span id="contratoInfo"></span></div>
+      </div>
+      <div class="chart-wrap" id="chartWrap">
+        <svg id="chart" role="img" aria-label="Últimos pregões e as linhas de venda, compra e stops do próximo pregão"></svg>
+        <div class="tip" id="tip" hidden>Pregão<b id="tipVal"></b><span class="chip" id="tipChip"></span></div>
+      </div>
+    </section>
+
+    <section class="card donut" id="c-taxa" aria-labelledby="t-taxa">
+      <p class="c-title" id="t-taxa">Volatilidade (σ)</p>
+      <svg id="gauge" viewBox="0 0 160 160" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="t-taxa"></svg>
+      <div class="legenda">
+        <div><span><span class="marca m-warn"></span>Amplitude média</span><b id="sigPts">—</b><span class="info">Média de (máxima − mínima) dos últimos 20 pregões</span></div>
+        <div><span><span class="marca m-gray"></span>Distância das linhas</span><b id="dist">—</b><span class="info" id="distInfo">0,55σ do fechamento</span></div>
+      </div>
+    </section>
+
+    <section class="card donut" aria-labelledby="t-stop">
+      <p class="c-title" id="t-stop">Stop e alvo · backtest 2023–2026</p>
+      <svg id="donutStop" viewBox="0 0 160 160" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="t-stop"></svg>
+      <div class="legenda">
+        <div><span><span class="marca m-white"></span>Stop (0,50σ)</span><b id="stopPts">—</b><span class="info">Além da linha · registrado na plataforma</span></div>
+        <div><span><span class="marca m-blue"></span>Alvo</span><b>Zerar no fim</b><span class="info" id="btInfo"></span></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card fluxo" id="c-fluxo" aria-labelledby="t-fluxo">
+    <div class="fluxo-head">
+      <h2 id="t-fluxo">Fluxo das linhas</h2>
+      <span class="trava"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>Preenchido automaticamente · não editável</span>
+    </div>
+    <div class="cols-head"><span>Entradas</span><span>Cálculo</span><span>Linhas</span><span>Tick de 5 pontos</span></div>
+    <div class="fluxo-body" id="fluxo">
+      <svg id="ligacoes" aria-hidden="true"></svg>
+      <div class="fcol" data-t="Entradas">
+        <div class="node" id="nFech"><span class="marca m-white"></span><span class="nm">Fechamento <small id="fData"></small></span><span class="v" id="fFech">—</span></div>
+        <div class="node" id="nAmp"><span class="marca m-warn"></span><span class="nm">Amplitude <small>20 pregões</small></span><span class="v" id="fAmp">—</span></div>
+        <div class="node" id="nE1"><span class="marca m-gray"></span><span class="nm">Máx. / mín. <small>1 pregão</small></span><span class="v" id="fE1">—</span></div>
+        <div class="node" id="nE5"><span class="marca m-gray"></span><span class="nm">Máx. / mín. <small>5 pregões</small></span><span class="v" id="fE5">—</span></div>
+        <div class="node" id="nE20"><span class="marca m-gray"></span><span class="nm">Máx. / mín. <small>20 pregões</small></span><span class="v" id="fE20">—</span></div>
+      </div>
+      <div class="fcol" data-t="Cálculo">
+        <div class="node" id="nSig"><span class="marca m-warn"></span><span class="nm">σ em pontos <small>fech. × amplitude</small></span><span class="v" id="fSig">—</span></div>
+        <div class="node" id="nBase"><span class="marca m-white"></span><span class="nm">Faixa <small>fech. ± 0,55σ</small></span><span class="v" id="fBase">—</span></div>
+        <div class="node" id="nAj"><span class="marca m-gray"></span><span class="nm">Ajuste <small>máx./mín. a até 0,20σ</small></span><span class="v" id="fAj">—</span></div>
+        <div class="node" id="nStop"><span class="marca m-white"></span><span class="nm">Stop <small>0,50σ</small></span><span class="v" id="fStop">—</span></div>
+      </div>
+      <div class="fcol" data-t="Linhas">
+        <div class="node" id="nSv"><span class="marca m-down"></span><span class="nm">Stop da venda</span><span class="v" id="fSv">—</span></div>
+        <div class="node forte" id="nV"><span class="marca m-down"></span><span class="nm">Venda</span><span class="v" id="fV">—</span></div>
+        <div class="node" id="nC"><span class="marca m-white"></span><span class="nm">Centro</span><span class="v" id="fC">—</span></div>
+        <div class="node forte" id="nCp"><span class="marca m-up"></span><span class="nm">Compra</span><span class="v" id="fCp">—</span></div>
+        <div class="node" id="nSc"><span class="marca m-up"></span><span class="nm">Stop da compra</span><span class="v" id="fSc">—</span></div>
+      </div>
+      <div class="fcol" data-t="Tick de 5 pontos">
+        <div class="node" id="tSv"><span class="nm" id="dSv">—</span><span class="v" id="vSv">—</span></div>
+        <div class="node" id="tV"><span class="nm" id="dV">—</span><span class="v" id="vV">—</span></div>
+        <div class="node" id="tC"><span class="nm" id="dC">fechamento</span><span class="v" id="vC">—</span></div>
+        <div class="node" id="tCp"><span class="nm" id="dCp">—</span><span class="v" id="vCp">—</span></div>
+        <div class="node" id="tSc"><span class="nm" id="dSc">—</span><span class="v" id="vSc">—</span></div>
+      </div>
+    </div>
+  </section>
+
+  <p class="fonte" id="fonte"></p>
+ </div>
+</div>
+
+<script>
+function iniciar(D, E) {
+  var $ = function (id) { return document.getElementById(id); };
+  var fmtInt = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 0 });
+  var fmt2 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  var FONT = ' font-family="Inter, Segoe UI, sans-serif"';
+  var sinalPts = function (v) { return (v >= 0 ? '+' : '−') + fmtInt.format(Math.abs(v)) + ' pts'; };
+  function hojeISO() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function dataBR(iso) { var p = iso.slice(0, 10).split('-'); return p[2] + '/' + p[1] + '/' + p[0] + (iso.length > 10 ? ' às ' + iso.slice(11, 16) : ''); }
+  function diaMes(iso) { var p = iso.slice(0, 10).split('-'); return p[2] + '/' + p[1]; }
+  function remPx() { return parseFloat(getComputedStyle(document.documentElement).fontSize) || 16; }
+
+  var hojeTxt = new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+  $('hoje').textContent = hojeTxt.charAt(0).toUpperCase() + hojeTxt.slice(1);
+
+  // ---- Situação da coleta ----
+  var aviso = $('aviso'), estado = 'none', txt = 'Sem coleta', msgs = [];
+  if (E) {
+    estado = 'err'; txt = 'Coleta falhou ' + dataBR(E.em);
+    aviso.className = 'aviso err'; aviso.hidden = false;
+    aviso.textContent = 'A última coleta falhou (' + dataBR(E.em) + '): ' + E.mensagem + (D ? ' Os valores abaixo são da coleta anterior.' : ' A coleta automática roda todo dia às 8:50.');
+  } else if (!D) {
+    aviso.className = 'aviso warn'; aviso.hidden = false;
+    aviso.textContent = 'Ainda não há coleta. A coleta automática roda todo dia às 8:50.';
+  } else {
+    var antigo = D.pregaoAlvo < hojeISO();
+    estado = antigo || (D.avisos && D.avisos.length) ? 'warn' : 'ok';
+    txt = 'Linhas para ' + diaMes(D.pregaoAlvo) + ' · coletado ' + (D.coletadoEm.slice(0, 10) === hojeISO() ? 'hoje às ' + D.coletadoEm.slice(11, 16) : 'em ' + dataBR(D.coletadoEm));
+    if (antigo) msgs.push('Atenção: estas linhas são do pregão de ' + dataBR(D.pregaoAlvo) + ', não de hoje. A próxima coleta automática é às 8:50.');
+    (D.avisos || []).forEach(function (a) { msgs.push(a); });
+    if (msgs.length) { aviso.className = 'aviso warn'; aviso.hidden = false; aviso.textContent = msgs.join(' '); }
+  }
+  $('statusTxt').textContent = txt;
+  $('railDot').className = 'dot ' + estado;
+
+  // ---- Anéis ----
+  function arco(cx, cy, r, a0, a1) {
+    var p = function (a) { return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+    var s = p(a0), e = p(a1);
+    return 'M' + s[0].toFixed(2) + ' ' + s[1].toFixed(2) + ' A' + r + ' ' + r + ' 0 ' + (a1 - a0 > Math.PI ? 1 : 0) + ' 1 ' + e[0].toFixed(2) + ' ' + e[1].toFixed(2);
+  }
+  function desenharAnel(id, frac, centro, rotulo) {
+    var cx = 80, cy = 80, r = 58, A0 = -Math.PI / 2, h = '';
+    h += '<circle cx="' + cx + '" cy="' + cy + '" r="74" fill="none" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="1.5 3.5"/>';
+    h += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#161616" stroke-width="14"/>';
+    if (frac > 0) {
+      var f = Math.min(frac, .999), a1 = A0 + Math.PI * 2 * f, N = Math.max(8, Math.round(120 * f));
+      for (var s = 0; s < N; s++) {
+        var t0 = A0 + (a1 - A0) * s / N, t1 = A0 + (a1 - A0) * Math.min(1, (s + 1.6) / N), c = Math.round(18 + 237 * Math.pow((s + 1) / N, 1.25));
+        h += '<path d="' + arco(cx, cy, r, t0, Math.min(t1, a1)) + '" fill="none" stroke="rgb(' + c + ',' + c + ',' + c + ')" stroke-width="14"/>';
+      }
+      var hx = cx + r * Math.cos(a1), hy = cy + r * Math.sin(a1);
+      h += '<circle cx="' + hx.toFixed(2) + '" cy="' + hy.toFixed(2) + '" r="10" fill="#fff" opacity=".18"/><circle cx="' + hx.toFixed(2) + '" cy="' + hy.toFixed(2) + '" r="7" fill="#fff"/>';
+    }
+    h += '<circle cx="' + cx + '" cy="' + cy + '" r="44" fill="var(--card-2)" stroke="var(--line)"/>';
+    h += '<text x="' + cx + '" y="' + (cy + 4) + '" text-anchor="middle" fill="var(--fg)" font-size="20" font-weight="600"' + FONT + '>' + centro + '</text>';
+    h += '<text x="' + cx + '" y="' + (cy + 19) + '" text-anchor="middle" fill="var(--muted)" font-size="7.5"' + FONT + '>' + rotulo + '</text>';
+    $(id).innerHTML = h;
+  }
+
+  // ---- Minigráficos: máximas (venda) e mínimas (compra) dos últimos pregões, com a linha do dia ----
+  function desenharSpark(id, valores, linha, cor) {
+    if (!valores || valores.length < 2) { $(id).innerHTML = ''; return; }
+    var lo = Math.min.apply(null, valores.concat([linha])), hi = Math.max.apply(null, valores.concat([linha])), pad = (hi - lo) * .12 || 1;
+    lo -= pad; hi += pad;
+    var y = function (v) { return (40 - (v - lo) / (hi - lo) * 40).toFixed(1); };
+    var d = valores.map(function (v, i) { return (i ? 'L' : 'M') + (i * 100 / (valores.length - 1)).toFixed(1) + ' ' + y(v); }).join(' ');
+    var g = id + 'g';
+    $(id).innerHTML = '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>' +
+      '<path d="' + d + ' L100 40 L0 40 Z" fill="url(#' + g + ')"/>' +
+      '<line x1="0" y1="' + y(linha) + '" x2="100" y2="' + y(linha) + '" stroke="' + cor + '" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>' +
+      '<path d="' + d + '" fill="none" stroke="#fff" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>' +
+      '<circle cx="100" cy="' + y(valores[valores.length - 1]) + '" r="2.2" fill="' + cor + '" vector-effect="non-scaling-stroke"/>';
+  }
+
+  // ---- Gráfico: últimos pregões (candles) e, à direita, as linhas do próximo pregão ----
+  function desenharLinhas() {
+    var svg = $('chart'), box = svg.getBoundingClientRect(), rem = remPx(), tip = $('tip');
+    var W = Math.max(Math.round(box.width), 240), H = Math.max(Math.round(box.height), 120);
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    var k = rem / 16, L = .2 * rem, R = W - .2 * rem, T = 2.6 * rem, B = H - 1.6 * rem, h = '';
+    for (var gy = 0; gy <= 3; gy++) {
+      var yy = (T + (B - T) * gy / 3).toFixed(1);
+      h += '<line x1="' + L + '" y1="' + yy + '" x2="' + R + '" y2="' + yy + '" stroke="var(--line)" stroke-width="' + k + '" stroke-dasharray="' + 2 * k + ' ' + 4 * k + '"/>';
+    }
+    if (!D || !D.historico || B - T < 2 * rem) {
+      h += '<text x="' + W / 2 + '" y="' + H / 2 + '" text-anchor="middle" fill="var(--muted)" font-size="' + .75 * rem + '"' + FONT + '>' + (D ? '' : 'Sem dados da última coleta') + '</text>';
+      svg.innerHTML = h; tip.hidden = true; return;
+    }
+    // Escala centrada nas linhas do dia (stops ± 0,45σ); candles antigos que passam da escala são recortados.
+    var Ln = D.linhas, hs = D.historico.slice(-10), sp = D.sigma.pts;
+    var lo = Ln.stopCompra - .45 * sp, hi = Ln.stopVenda + .45 * sp;
+    var y = function (v) { return +(B - (v - lo) / (hi - lo) * (B - T)).toFixed(1); };
+    h += '<clipPath id="recorte"><rect x="' + L + '" y="' + T + '" width="' + (R - L) + '" height="' + (B - T) + '"/></clipPath><g clip-path="url(#recorte)">';
+    var xDiv = L + (R - L) * .6, passo = (xDiv - L) / hs.length, larg = Math.max(2 * k, passo * .5);
+    hs.forEach(function (c, i) {
+      var x = L + passo * (i + .5), sobe = c.fechamento >= c.abertura, cor = sobe ? '#d9d9d9' : '#5a5a5a';
+      h += '<line x1="' + x + '" y1="' + y(c.maxima) + '" x2="' + x + '" y2="' + y(c.minima) + '" stroke="' + cor + '" stroke-width="' + k + '"/>';
+      var y1 = y(Math.max(c.abertura, c.fechamento)), y2 = y(Math.min(c.abertura, c.fechamento));
+      h += '<rect x="' + (x - larg / 2) + '" y="' + y1 + '" width="' + larg + '" height="' + Math.max(k, y2 - y1) + '" rx="' + k + '" fill="' + (sobe ? '#d9d9d9' : '#2a2a2a') + '" stroke="' + cor + '" stroke-width="' + k + '"/>';
+    });
+    h += '</g><rect x="' + xDiv + '" y="' + T + '" width="' + (R - xDiv) + '" height="' + (B - T) + '" fill="url(#zona)"/>';
+    h = '<defs><linearGradient id="zona" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".05"/><stop offset="1" stop-color="#fff" stop-opacity=".01"/></linearGradient></defs>' + h;
+    h += '<line x1="' + xDiv + '" y1="' + (T - .9 * rem) + '" x2="' + xDiv + '" y2="' + B + '" stroke="var(--muted)" stroke-width="' + k + '" opacity=".5"/>';
+    var nivel = function (v, cor, txt, tracejado, forte, acima, esquerda) {
+      var yy = y(v);
+      h += '<line x1="' + (forte ? L : xDiv) + '" y1="' + yy + '" x2="' + R + '" y2="' + yy + '" stroke="' + cor + '" stroke-width="' + (forte ? 1.6 : 1.1) * k + '"' +
+           (tracejado ? ' stroke-dasharray="' + 4 * k + ' ' + 4 * k + '"' : '') + (forte ? '' : ' opacity=".8"') + '/>';
+      h += '<text x="' + (esquerda ? xDiv + .4 * rem : R - 2 * k) + '" y="' + (acima ? yy - .4 * rem : yy + 1 * rem) + '" text-anchor="' + (esquerda ? 'start' : 'end') + '" fill="' + cor + '" font-size="' + (forte ? .72 : .62) * rem + '" font-weight="' + (forte ? 600 : 500) + '"' + FONT + '>' + txt + ' ' + fmtInt.format(v) + '</text>';
+    };
+    nivel(Ln.stopVenda, 'var(--down)', 'Stop', true, false, true);
+    nivel(Ln.venda, 'var(--down)', 'Venda', false, true, true);
+    nivel(Ln.centro, 'var(--muted)', 'Centro', true, false, true, true);
+    nivel(Ln.compra, 'var(--up)', 'Compra', false, true, false);
+    nivel(Ln.stopCompra, 'var(--up)', 'Stop', true, false, false);
+    h += '<circle cx="' + (L + passo * (hs.length - .5)) + '" cy="' + y(Ln.centro) + '" r="' + 4 * k + '" fill="#fff" stroke="var(--card)" stroke-width="' + 2 * k + '"/>';
+    [[L, diaMes(hs[0].data), 'start'], [xDiv - .3 * rem, diaMes(hs[hs.length - 1].data), 'end'], [R, 'Próximo pregão', 'end']].forEach(function (p) {
+      h += '<text x="' + p[0] + '" y="' + (B + 1.2 * rem) + '" text-anchor="' + p[2] + '" fill="var(--faint)" font-size="' + .62 * rem + '"' + FONT + '>' + p[1] + '</text>';
+    });
+    svg.innerHTML = h;
+    tip.hidden = false;
+    tip.style.left = Math.min(Math.max((xDiv + (R - xDiv) / 2) / W * 100, 12), 88) + '%';
+  }
+
+  // ---- Ligações do quadro "Fluxo das linhas" ----
+  var LIGA = [['nFech', 'nSig'], ['nAmp', 'nSig'], ['nFech', 'nBase'], ['nSig', 'nBase'], ['nE1', 'nAj'], ['nE5', 'nAj'], ['nE20', 'nAj'], ['nSig', 'nStop'],
+              ['nBase', 'nV'], ['nBase', 'nCp'], ['nAj', 'nV'], ['nAj', 'nCp'], ['nStop', 'nSv'], ['nStop', 'nSc'], ['nFech', 'nC'],
+              ['nSv', 'tSv'], ['nV', 'tV'], ['nC', 'tC'], ['nCp', 'tCp'], ['nSc', 'tSc']];
+  function desenharLigacoes() {
+    var svg = $('ligacoes'), base = $('fluxo').getBoundingClientRect();
+    if (!base.width || getComputedStyle(svg).display === 'none') return;
+    svg.setAttribute('viewBox', '0 0 ' + base.width + ' ' + base.height);
+    var h = '';
+    LIGA.forEach(function (p) {
+      var a = $(p[0]).getBoundingClientRect(), b = $(p[1]).getBoundingClientRect();
+      var x1 = a.right - base.left, y1 = a.top + a.height / 2 - base.top, x2 = b.left - base.left, y2 = b.top + b.height / 2 - base.top;
+      var xm = (x1 + x2) / 2, dy = y2 - y1, r = Math.min(6, Math.abs(dy) / 2), s = dy >= 0 ? 1 : -1;
+      var d = Math.abs(dy) < 1 ? 'M' + x1 + ' ' + y1 + ' H' + x2 :
+        'M' + x1 + ' ' + y1 + ' H' + (xm - r) + ' Q' + xm + ' ' + y1 + ' ' + xm + ' ' + (y1 + s * r) + ' V' + (y2 - s * r) + ' Q' + xm + ' ' + y2 + ' ' + (xm + r) + ' ' + y2 + ' H' + x2;
+      h += '<path d="' + d + '" fill="none" stroke="var(--wire)" stroke-width="1"/>';
+      h += '<circle cx="' + x1 + '" cy="' + y1 + '" r="2" fill="var(--faint)"/><circle cx="' + x2 + '" cy="' + y2 + '" r="2" fill="var(--muted)"/>';
+    });
+    svg.innerHTML = h;
+  }
+
+  // ---- Preenchimento ----
+  function preencher() {
+    if (!D) { desenharAnel('gauge', 0, '—', 'σ diário'); desenharAnel('donutStop', 0, '—', 'acerto'); desenharLinhas(); desenharLigacoes(); return; }
+    var Ln = D.linhas, W = D.win, S = D.sigma, X = D.estrutura, BT = D.backtest;
+    var curto = function (o) { return o.replace('Faixa de volatilidade', 'faixa de volatilidade').replace('Maxima', 'máxima').replace('Minima', 'mínima').replace('pregoes', 'pregões').replace('pregao', 'pregão'); };
+    $('venda').textContent = fmtInt.format(Ln.venda); $('vendaC').textContent = sinalPts(Ln.venda - Ln.centro);
+    $('vendaT').textContent = 'stop ' + fmtInt.format(Ln.stopVenda) + ' · ' + curto(Ln.origemVenda);
+    $('compra').textContent = fmtInt.format(Ln.compra); $('compraC').textContent = sinalPts(Ln.compra - Ln.centro);
+    $('compraT').textContent = 'stop ' + fmtInt.format(Ln.stopCompra) + ' · ' + curto(Ln.origemCompra);
+    $('centro').textContent = fmtInt.format(Ln.centro);
+    $('sigChip').textContent = 'σ ' + fmt2.format(S.pct) + '%';
+    $('centroT').textContent = 'Pregão de ' + dataBR(W.dataPregao) + ' · máx. ' + fmtInt.format(W.maxima) + ' · mín. ' + fmtInt.format(W.minima);
+    $('contrato').textContent = W.simbolo;
+    $('contratoInfo').textContent = 'venc. ' + diaMes(W.vencimento) + ' · B3';
+    $('tipVal').textContent = diaMes(D.pregaoAlvo); $('tipChip').textContent = 'σ ' + fmtInt.format(S.pts) + ' pts';
+    $('rCentro1').textContent = fmtInt.format(Ln.centro);
+    desenharAnel('gauge', S.pct / 3, fmt2.format(S.pct) + '%', 'σ diário');
+    $('sigPts').textContent = fmtInt.format(S.pts) + ' pts';
+    $('dist').textContent = fmtInt.format(Ln.venda - Ln.centro) + ' / ' + fmtInt.format(Ln.centro - Ln.compra);
+    $('distInfo').textContent = 'Venda / compra até o centro · 0,55σ = ' + fmtInt.format(.55 * S.pts) + ' pts';
+    desenharAnel('donutStop', BT.acerto / 100, fmtInt.format(BT.acerto) + '%', 'acerto');
+    $('stopPts').textContent = fmtInt.format(Ln.stopPts) + ' pts';
+    $('btInfo').textContent = 'Ganho médio ' + fmtInt.format(BT.ganhoMedio) + ' · perda média ' + fmtInt.format(BT.perdaMedia) + ' pts · ' + BT.operacoes + ' operações';
+    // fluxo
+    $('fData').textContent = diaMes(W.dataPregao); $('fFech').textContent = fmtInt.format(W.fechamento);
+    $('fAmp').textContent = fmt2.format(S.pct) + '%';
+    $('fE1').textContent = fmtInt.format(X.max1) + ' / ' + fmtInt.format(X.min1);
+    $('fE5').textContent = fmtInt.format(X.max5) + ' / ' + fmtInt.format(X.min5);
+    $('fE20').textContent = fmtInt.format(X.max20) + ' / ' + fmtInt.format(X.min20);
+    $('fSig').textContent = fmtInt.format(S.pts);
+    $('fBase').textContent = fmtInt.format(Ln.baseVenda) + ' / ' + fmtInt.format(Ln.baseCompra);
+    var aj = function (o) { return o === 'Faixa de volatilidade' ? 'sem ajuste' : curto(o).replace('máxima de ', 'máx. ').replace('mínima de ', 'mín. ').replace(' pregões', 'p').replace(' pregão', 'p'); };
+    $('fAj').textContent = aj(Ln.origemVenda) + ' / ' + aj(Ln.origemCompra);
+    $('fStop').textContent = fmtInt.format(Ln.stopPts) + ' pts';
+    $('fSv').textContent = fmtInt.format(Ln.stopVenda); $('fV').textContent = fmtInt.format(Ln.venda); $('fC').textContent = fmtInt.format(Ln.centro);
+    $('fCp').textContent = fmtInt.format(Ln.compra); $('fSc').textContent = fmtInt.format(Ln.stopCompra);
+    $('vSv').textContent = fmtInt.format(Ln.stopVenda); $('vV').textContent = fmtInt.format(Ln.venda); $('vC').textContent = fmtInt.format(Ln.centro);
+    $('vCp').textContent = fmtInt.format(Ln.compra); $('vSc').textContent = fmtInt.format(Ln.stopCompra);
+    $('dSv').textContent = '+' + fmtInt.format(Ln.stopPts) + ' da venda'; $('dV').textContent = sinalPts(Ln.venda - Ln.centro) + ' vs centro';
+    $('dCp').textContent = sinalPts(Ln.compra - Ln.centro) + ' vs centro'; $('dSc').textContent = '−' + fmtInt.format(Ln.stopPts) + ' da compra';
+    desenharSpark('sparkMax', D.historico.map(function (c) { return c.maxima; }), Ln.venda, 'var(--down)');
+    desenharSpark('sparkMin', D.historico.map(function (c) { return c.minima; }), Ln.compra, 'var(--up)');
+    var anos = Object.keys(BT.anos).map(function (a) { return a + ' ' + sinalPts(BT.anos[a]).replace(' pts', ''); }).join(' · ');
+    $('fonte').innerHTML = 'Coletado em ' + dataBR(D.coletadoEm) + ' · <a href="' + W.url + '" target="_blank" rel="noopener">Boletim diário da B3</a> (fechamento, máximas e mínimas do contrato mais negociado)' +
+      ' · Backtest ' + BT.periodo + ': ' + BT.operacoes + ' operações, acerto ' + fmtInt.format(BT.acerto) + '%, +' + BT.mediaOp + ' pts por operação, pior queda ' + fmtInt.format(BT.piorQueda) + ' pts (' + anos + ').' +
+      '<br>' + (D.ticks ? 'Alvo fixo em pontos ainda em teste: dados tick a tick guardados ' + D.ticks.pregoes + ' de ' + D.ticks.meta + ' pregões. ' : '') + 'Referência, não recomendação de investimento.';
+    desenharLinhas(); desenharLigacoes();
+  }
+  $('copiar').addEventListener('click', function () {
+    if (!D) return;
+    var Ln = D.linhas;
+    var t = 'STOP V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | CENTRO ' + fmtInt.format(Ln.centro) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | STOP C ' + fmtInt.format(Ln.stopCompra);
+    var ok = function () { $('copiar').textContent = 'Copiado'; setTimeout(function () { $('copiar').textContent = 'Copiar linhas'; }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { prompt('Copie:', t); }); else prompt('Copie:', t);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('.nav a'), function (a) {
+    a.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      document.querySelectorAll('.nav a').forEach(function (x) { x.classList.toggle('on', x === a); });
+      var alvo = document.querySelector(a.getAttribute('href'));
+      if (!alvo) return;
+      alvo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (alvo.classList.contains('card')) { alvo.classList.add('foco'); setTimeout(function () { alvo.classList.remove('foco'); }, 1200); }
+    });
+  });
+  var espera = null;
+  window.addEventListener('resize', function () { clearTimeout(espera); espera = setTimeout(preencher, 80); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(preencher);
+  preencher();
+}
+fetch('dados.json?t=' + Date.now(), { cache: 'no-store' })
+  .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+  .then(function (d) { iniciar(d, null); }, function (e) { iniciar(null, { em: new Date().toISOString().slice(0, 19), mensagem: 'Não foi possível ler os dados (' + e.message + ').' }); });
+</script>
+</body>
+</html>
