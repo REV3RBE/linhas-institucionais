@@ -1,4 +1,4 @@
-# Linhas Institucionais do Mini Índice
+# ProfitWay - Regiões institucionais
 
 Site que mostra, antes da abertura da B3, a linha de venda (resistência), a linha de compra (suporte), o centro e os stops do Mini Índice (WIN).
 
