@@ -92,7 +92,7 @@ $dados = [ordered]@{
     estrutura  = [ordered]@{ max1 = [math]::Round($ext['max1']); max5 = [math]::Round($ext['max5']); max20 = [math]::Round($ext['max20'])
                              min1 = [math]::Round($ext['min1']); min5 = [math]::Round($ext['min5']); min20 = [math]::Round($ext['min20']) }
     linhas     = [ordered]@{ centro = $mu; baseVenda = [math]::Round($baseU); baseCompra = [math]::Round($baseD); venda = $venda; compra = $compra
-                             origemVenda = $origU; origemCompra = $origD; stopPts = $stopPts; stopVenda = $venda + $stopPts; stopCompra = $compra - $stopPts
+                             origemVenda = $origU; origemCompra = $origD; meio = Get-Tick5 (($venda + $compra) / 2); stopPts = $stopPts; stopVenda = $venda + $stopPts; stopCompra = $compra - $stopPts
                              kLinha = 0.55; kAjuste = 0.20; kStop = 0.50 }
     backtest   = [ordered]@{ periodo = '2023-2026'; operacoes = 237; acerto = 54.0; ganhoMedio = 768; perdaMedia = 672; mediaOp = 106; fatorLucro = 1.33
                              piorQueda = 11348; piorSequencia = 6; anos = [ordered]@{ '2023' = 6984; '2024' = 1197; '2025' = 16205; '2026' = 741 } }

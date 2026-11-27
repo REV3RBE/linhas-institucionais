@@ -376,7 +376,7 @@
 
   <div class="regra" id="regra">
     <span class="passo"><span class="n">1</span><span>Antes das 9h: <b>venda limitada</b> na linha de cima e <b>compra limitada</b> na de baixo, cada uma com seu <b>stop na plataforma</b>.</span></span>
-    <span class="passo"><span class="n">2</span><span>Às 9h: abriu <b>acima</b> de <b id="rCentro1">—</b> → cancele a venda · abriu <b>abaixo</b> → cancele a compra.</span></span>
+    <span class="passo"><span class="n">2</span><span>Às 9h, compare a abertura com o <b>meio das linhas</b> (<b id="rCentro1">—</b>): abriu <b>acima</b> → cancele a venda · abriu <b>abaixo</b> → cancele a compra.</span></span>
     <span class="passo"><span class="n">3</span><span>Sem alvo: <b>zere no fim do pregão</b>. Depois de um stop, não reentre.</span></span>
   </div>
 
@@ -636,7 +636,8 @@ function iniciar(D, E) {
     $('contrato').textContent = W.simbolo;
     $('contratoInfo').textContent = 'venc. ' + diaMes(W.vencimento) + ' · B3';
     $('tipVal').textContent = diaMes(D.pregaoAlvo); $('tipChip').textContent = 'σ ' + fmtInt.format(S.pts) + ' pts';
-    $('rCentro1').textContent = fmtInt.format(Ln.centro);
+    var meio = Ln.meio || Math.round((Ln.venda + Ln.compra) / 2 / 5) * 5;   // referência do filtro das 9h, como no backtest
+    $('rCentro1').textContent = fmtInt.format(meio);
     desenharAnel('gauge', S.pct / 3, fmt2.format(S.pct) + '%', 'σ diário');
     $('sigPts').textContent = fmtInt.format(S.pts) + ' pts';
     $('dist').textContent = fmtInt.format(Ln.venda - Ln.centro) + ' / ' + fmtInt.format(Ln.centro - Ln.compra);
@@ -672,7 +673,7 @@ function iniciar(D, E) {
   $('copiar').addEventListener('click', function () {
     if (!D) return;
     var Ln = D.linhas;
-    var t = 'STOP V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | CENTRO ' + fmtInt.format(Ln.centro) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | STOP C ' + fmtInt.format(Ln.stopCompra);
+    var t = 'STOP V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | STOP C ' + fmtInt.format(Ln.stopCompra) + ' | FILTRO 9H (meio) ' + fmtInt.format(Ln.meio || Math.round((Ln.venda + Ln.compra) / 2 / 5) * 5);
     var ok = function () { $('copiar').textContent = 'Copiado'; setTimeout(function () { $('copiar').textContent = 'Copiar linhas'; }, 1500); };
     if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { prompt('Copie:', t); }); else prompt('Copie:', t);
   });
