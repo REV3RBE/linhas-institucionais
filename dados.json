@@ -1,171 +1,169 @@
 {
-    "coletadoEm":  "2026-11-25T22:16:26",
-    "pregaoAlvo":  "2026-11-26",
-    "avisos":  [
-
-               ],
-    "win":  {
-                "fonte":  "B3 (boletim diario BVBG.086)",
-                "simbolo":  "WINZ26",
-                "vencimento":  "2026-12-16",
-                "dataPregao":  "2026-11-25",
-                "fechamento":  167725,
-                "abertura":  164650,
-                "maxima":  168300,
-                "minima":  164510,
-                "ajuste":  167885,
-                "url":  "https://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/boletim-diario/"
-            },
-    "sigma":  {
-                  "pct":  1.7968,
-                  "pts":  3014,
-                  "pregoes":  20
-              },
-    "estrutura":  {
-                      "max1":  168300,
-                      "max5":  171780,
-                      "max20":  181185,
-                      "min1":  164510,
-                      "min5":  164510,
-                      "min20":  164510
-                  },
-    "linhas":  {
-                   "centro":  167725,
-                   "baseVenda":  169383,
-                   "baseCompra":  166067,
-                   "venda":  169385,
-                   "compra":  166065,
-                   "origemVenda":  "Faixa de volatilidade",
-                   "origemCompra":  "Faixa de volatilidade",
-                   "stopPts":  1505,
-                   "stopVenda":  170890,
-                   "stopCompra":  164560,
-                   "kLinha":  0.55,
-                   "kAjuste":  0.2,
-                   "kStop":  0.5
-               },
-    "backtest":  {
-                     "periodo":  "2023-2026",
-                     "operacoes":  237,
-                     "acerto":  54,
-                     "ganhoMedio":  768,
-                     "perdaMedia":  672,
-                     "mediaOp":  106,
-                     "fatorLucro":  1.33,
-                     "piorQueda":  11348,
-                     "piorSequencia":  6,
-                     "anos":  {
-                                  "2023":  6984,
-                                  "2024":  1197,
-                                  "2025":  16205,
-                                  "2026":  741
-                              }
-                 },
-    "historico":  [
-                      {
-                          "data":  "2026-11-04",
-                          "abertura":  169365,
-                          "maxima":  170090,
-                          "minima":  168390,
-                          "fechamento":  169530
-                      },
-                      {
-                          "data":  "2026-11-05",
-                          "abertura":  170000,
-                          "maxima":  170975,
-                          "minima":  167355,
-                          "fechamento":  167495
-                      },
-                      {
-                          "data":  "2026-11-06",
-                          "abertura":  167850,
-                          "maxima":  170990,
-                          "minima":  167575,
-                          "fechamento":  170720
-                      },
-                      {
-                          "data":  "2026-11-09",
-                          "abertura":  170940,
-                          "maxima":  174425,
-                          "minima":  170515,
-                          "fechamento":  174235
-                      },
-                      {
-                          "data":  "2026-11-10",
-                          "abertura":  173720,
-                          "maxima":  175350,
-                          "minima":  172450,
-                          "fechamento":  173305
-                      },
-                      {
-                          "data":  "2026-11-11",
-                          "abertura":  173770,
-                          "maxima":  174850,
-                          "minima":  173300,
-                          "fechamento":  173375
-                      },
-                      {
-                          "data":  "2026-11-12",
-                          "abertura":  173165,
-                          "maxima":  173575,
-                          "minima":  171685,
-                          "fechamento":  172770
-                      },
-                      {
-                          "data":  "2026-11-13",
-                          "abertura":  172900,
-                          "maxima":  174430,
-                          "minima":  172495,
-                          "fechamento":  174360
-                      },
-                      {
-                          "data":  "2026-11-16",
-                          "abertura":  173505,
-                          "maxima":  173660,
-                          "minima":  170100,
-                          "fechamento":  171000
-                      },
-                      {
-                          "data":  "2026-11-17",
-                          "abertura":  170950,
-                          "maxima":  173410,
-                          "minima":  170355,
-                          "fechamento":  171540
-                      },
-                      {
-                          "data":  "2026-11-18",
-                          "abertura":  171105,
-                          "maxima":  171780,
-                          "minima":  168560,
-                          "fechamento":  168970
-                      },
-                      {
-                          "data":  "2026-11-19",
-                          "abertura":  169870,
-                          "maxima":  169950,
-                          "minima":  167230,
-                          "fechamento":  167605
-                      },
-                      {
-                          "data":  "2026-11-23",
-                          "abertura":  166780,
-                          "maxima":  167270,
-                          "minima":  165345,
-                          "fechamento":  166250
-                      },
-                      {
-                          "data":  "2026-11-24",
-                          "abertura":  165465,
-                          "maxima":  168935,
-                          "minima":  165180,
-                          "fechamento":  165285
-                      },
-                      {
-                          "data":  "2026-11-25",
-                          "abertura":  164650,
-                          "maxima":  168300,
-                          "minima":  164510,
-                          "fechamento":  167725
-                      }
-                  ]
+  "coletadoEm": "2026-11-26T21:17:33",
+  "pregaoAlvo": "2026-11-27",
+  "avisos": [],
+  "win": {
+    "fonte": "B3 (boletim diario BVBG.086)",
+    "simbolo": "WINZ26",
+    "vencimento": "2026-12-16",
+    "dataPregao": "2026-11-26",
+    "fechamento": 178960.0,
+    "abertura": 169790.0,
+    "maxima": 179895.0,
+    "minima": 169340.0,
+    "ajuste": 178728.0,
+    "url": "https://www.b3.com.br/pt_br/market-data-e-indices/servicos-de-dados/market-data/consultas/boletim-diario/"
+  },
+  "sigma": {
+    "pct": 2.0052,
+    "pts": 3589.0,
+    "pregoes": 20
+  },
+  "estrutura": {
+    "max1": 179895.0,
+    "max5": 179895.0,
+    "max20": 179895.0,
+    "min1": 169340.0,
+    "min5": 164510.0,
+    "min20": 164510.0
+  },
+  "linhas": {
+    "centro": 178960.0,
+    "baseVenda": 180934.0,
+    "baseCompra": 176986.0,
+    "venda": 180935.0,
+    "compra": 176985.0,
+    "origemVenda": "Faixa de volatilidade",
+    "origemCompra": "Faixa de volatilidade",
+    "stopPts": 1795.0,
+    "stopVenda": 182730.0,
+    "stopCompra": 175190.0,
+    "kLinha": 0.55,
+    "kAjuste": 0.2,
+    "kStop": 0.5
+  },
+  "backtest": {
+    "periodo": "2023-2026",
+    "operacoes": 237,
+    "acerto": 54.0,
+    "ganhoMedio": 768,
+    "perdaMedia": 672,
+    "mediaOp": 106,
+    "fatorLucro": 1.33,
+    "piorQueda": 11348,
+    "piorSequencia": 6,
+    "anos": {
+      "2023": 6984,
+      "2024": 1197,
+      "2025": 16205,
+      "2026": 741
+    }
+  },
+  "historico": [
+    {
+      "data": "2026-11-05",
+      "abertura": 170000.0,
+      "maxima": 170975.0,
+      "minima": 167355.0,
+      "fechamento": 167495.0
+    },
+    {
+      "data": "2026-11-06",
+      "abertura": 167850.0,
+      "maxima": 170990.0,
+      "minima": 167575.0,
+      "fechamento": 170720.0
+    },
+    {
+      "data": "2026-11-09",
+      "abertura": 170940.0,
+      "maxima": 174425.0,
+      "minima": 170515.0,
+      "fechamento": 174235.0
+    },
+    {
+      "data": "2026-11-10",
+      "abertura": 173720.0,
+      "maxima": 175350.0,
+      "minima": 172450.0,
+      "fechamento": 173305.0
+    },
+    {
+      "data": "2026-11-11",
+      "abertura": 173770.0,
+      "maxima": 174850.0,
+      "minima": 173300.0,
+      "fechamento": 173375.0
+    },
+    {
+      "data": "2026-11-12",
+      "abertura": 173165.0,
+      "maxima": 173575.0,
+      "minima": 171685.0,
+      "fechamento": 172770.0
+    },
+    {
+      "data": "2026-11-13",
+      "abertura": 172900.0,
+      "maxima": 174430.0,
+      "minima": 172495.0,
+      "fechamento": 174360.0
+    },
+    {
+      "data": "2026-11-16",
+      "abertura": 173505.0,
+      "maxima": 173660.0,
+      "minima": 170100.0,
+      "fechamento": 171000.0
+    },
+    {
+      "data": "2026-11-17",
+      "abertura": 170950.0,
+      "maxima": 173410.0,
+      "minima": 170355.0,
+      "fechamento": 171540.0
+    },
+    {
+      "data": "2026-11-18",
+      "abertura": 171105.0,
+      "maxima": 171780.0,
+      "minima": 168560.0,
+      "fechamento": 168970.0
+    },
+    {
+      "data": "2026-11-19",
+      "abertura": 169870.0,
+      "maxima": 169950.0,
+      "minima": 167230.0,
+      "fechamento": 167605.0
+    },
+    {
+      "data": "2026-11-23",
+      "abertura": 166780.0,
+      "maxima": 167270.0,
+      "minima": 165345.0,
+      "fechamento": 166250.0
+    },
+    {
+      "data": "2026-11-24",
+      "abertura": 165465.0,
+      "maxima": 168935.0,
+      "minima": 165180.0,
+      "fechamento": 165285.0
+    },
+    {
+      "data": "2026-11-25",
+      "abertura": 164650.0,
+      "maxima": 168300.0,
+      "minima": 164510.0,
+      "fechamento": 167725.0
+    },
+    {
+      "data": "2026-11-26",
+      "abertura": 169790.0,
+      "maxima": 179895.0,
+      "minima": 169340.0,
+      "fechamento": 178960.0
+    }
+  ]
 }
