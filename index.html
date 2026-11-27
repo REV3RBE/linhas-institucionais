@@ -364,7 +364,7 @@
   <div class="head" id="c-painel">
     <div>
       <h1>Linhas institucionais de hoje</h1>
-      <p>Linha de venda (resistência) e de compra (suporte) do Mini Índice, com stop, calculadas com o boletim da B3 antes da abertura.</p>
+      <p>Regiões de atenção do Mini Índice: venda (resistência) e compra (suporte), calculadas com o boletim da B3 antes da abertura. Entrada só com o gatilho de falso rompimento no gráfico de 5 minutos.</p>
     </div>
     <div class="acoes">
       <span class="pill"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3"/></svg><span id="hoje"></span></span>
@@ -375,9 +375,9 @@
   <div id="aviso" class="aviso" hidden></div>
 
   <div class="regra" id="regra">
-    <span class="passo"><span class="n">1</span><span>Antes das 9h: <b>venda limitada</b> na linha de cima e <b>compra limitada</b> na de baixo, cada uma com seu <b>stop na plataforma</b>.</span></span>
-    <span class="passo"><span class="n">2</span><span>Às 9h, compare a abertura com o <b>meio das linhas</b> (<b id="rCentro1">—</b>): abriu <b>acima</b> → cancele a venda · abriu <b>abaixo</b> → cancele a compra.</span></span>
-    <span class="passo"><span class="n">3</span><span>Sem alvo: <b>zere no fim do pregão</b>. Depois de um stop, não reentre.</span></span>
+    <span class="passo"><span class="n">1</span><span><b>Não deixe ordem nas linhas</b>: são regiões de atenção. Acompanhe o gráfico de <b>5 min</b>. Se o pregão abrir além de uma linha, ignore aquela região no dia.</span></span>
+    <span class="passo"><span class="n">2</span><span><b>Gatilho (falso rompimento)</b>: um candle <b>fecha além da linha</b> e, em até 2 candles, outro <b>fecha de volta</b> para dentro → entre no fechamento dele. <b>Stop</b> 1 tick além do extremo do rompimento.</span></span>
+    <span class="passo"><span class="n">3</span><span><b>Alvo 600 pts</b>. Stop móvel: <b>0 a 0 em +200</b>, depois protege +100 a cada +100 (+300 → 100, +400 → 200, +500 → 300). Uma entrada por região no dia; nada depois de 17h30.</span></span>
   </div>
 
   <div class="kpis">
@@ -404,7 +404,7 @@
         <div class="ontem"><small>Contrato vigente</small><b id="contrato">—</b><span id="contratoInfo"></span></div>
       </div>
       <div class="chart-wrap" id="chartWrap">
-        <svg id="chart" role="img" aria-label="Últimos pregões e as linhas de venda, compra e stops do próximo pregão"></svg>
+        <svg id="chart" role="img" aria-label="Últimos pregões e as regiões de venda e compra do próximo pregão, com os limites"></svg>
         <div class="tip" id="tip" hidden>Pregão<b id="tipVal"></b><span class="chip" id="tipChip"></span></div>
       </div>
     </section>
@@ -419,11 +419,11 @@
     </section>
 
     <section class="card donut" aria-labelledby="t-stop">
-      <p class="c-title" id="t-stop">Stop e alvo · backtest 2023–2026</p>
+      <p class="c-title" id="t-stop">Gatilho · teste prévio (5 min)</p>
       <svg id="donutStop" viewBox="0 0 160 160" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="t-stop"></svg>
       <div class="legenda">
-        <div><span><span class="marca m-white"></span>Stop (0,50σ)</span><b id="stopPts">—</b><span class="info">Além da linha · registrado na plataforma</span></div>
-        <div><span><span class="marca m-blue"></span>Alvo</span><b>Zerar no fim</b><span class="info" id="btInfo"></span></div>
+        <div><span><span class="marca m-white"></span>Stop</span><b>Extremo + 1 tick</b><span class="info">Além da máxima (venda) ou mínima (compra) do rompimento · 0 a 0 em +200</span></div>
+        <div><span><span class="marca m-blue"></span>Alvo</span><b>600 pts</b><span class="info" id="btInfo"></span></div>
       </div>
     </section>
   </div>
@@ -447,14 +447,14 @@
         <div class="node" id="nSig"><span class="marca m-warn"></span><span class="nm">σ em pontos <small>fech. × amplitude</small></span><span class="v" id="fSig">—</span></div>
         <div class="node" id="nBase"><span class="marca m-white"></span><span class="nm">Faixa <small>fech. ± 0,55σ</small></span><span class="v" id="fBase">—</span></div>
         <div class="node" id="nAj"><span class="marca m-gray"></span><span class="nm">Ajuste <small>máx./mín. a até 0,20σ</small></span><span class="v" id="fAj">—</span></div>
-        <div class="node" id="nStop"><span class="marca m-white"></span><span class="nm">Stop <small>0,50σ</small></span><span class="v" id="fStop">—</span></div>
+        <div class="node" id="nStop"><span class="marca m-white"></span><span class="nm">Limite <small>0,50σ</small></span><span class="v" id="fStop">—</span></div>
       </div>
       <div class="fcol" data-t="Linhas">
-        <div class="node" id="nSv"><span class="marca m-down"></span><span class="nm">Stop da venda</span><span class="v" id="fSv">—</span></div>
+        <div class="node" id="nSv"><span class="marca m-down"></span><span class="nm">Limite da venda</span><span class="v" id="fSv">—</span></div>
         <div class="node forte" id="nV"><span class="marca m-down"></span><span class="nm">Venda</span><span class="v" id="fV">—</span></div>
         <div class="node" id="nC"><span class="marca m-white"></span><span class="nm">Centro</span><span class="v" id="fC">—</span></div>
         <div class="node forte" id="nCp"><span class="marca m-up"></span><span class="nm">Compra</span><span class="v" id="fCp">—</span></div>
-        <div class="node" id="nSc"><span class="marca m-up"></span><span class="nm">Stop da compra</span><span class="v" id="fSc">—</span></div>
+        <div class="node" id="nSc"><span class="marca m-up"></span><span class="nm">Limite da compra</span><span class="v" id="fSc">—</span></div>
       </div>
       <div class="fcol" data-t="Tick de 5 pontos">
         <div class="node" id="tSv"><span class="nm" id="dSv">—</span><span class="v" id="vSv">—</span></div>
@@ -585,11 +585,11 @@ function iniciar(D, E) {
       h += '<line x1="' + L + '" y1="' + yy + '" x2="' + R + '" y2="' + yy + '" stroke="transparent" stroke-width="' + 10 * k + '"/>';   // área de hover
       h += '<text x="' + (esquerda ? xDiv + .4 * rem : R - 2 * k) + '" y="' + (acima ? yy - .4 * rem : yy + 1 * rem) + '" text-anchor="' + (esquerda ? 'start' : 'end') + '" fill="' + cor + '" font-size="' + (forte ? .72 : .62) * rem + '" font-weight="' + (forte ? 600 : 500) + '"' + FONT + '>' + txt + ' ' + fmtInt.format(v) + '</text></g>';
     };
-    nivel(Ln.stopVenda, 'var(--down)', 'Stop', true, false, true);
+    nivel(Ln.stopVenda, 'var(--down)', 'Limite', true, false, true);
     nivel(Ln.venda, 'var(--down)', 'Venda', false, true, true);
     nivel(Ln.centro, 'var(--muted)', 'Centro', true, false, true, true);
     nivel(Ln.compra, 'var(--up)', 'Compra', false, true, false);
-    nivel(Ln.stopCompra, 'var(--up)', 'Stop', true, false, false);
+    nivel(Ln.stopCompra, 'var(--up)', 'Limite', true, false, false);
     h += '<circle class="fade" style="--d:3s" cx="' + (L + passo * (hs.length - .5)) + '" cy="' + y(Ln.centro) + '" r="' + 4 * k + '" fill="#fff" stroke="var(--card)" stroke-width="' + 2 * k + '"/>';
     [[L, diaMes(hs[0].data), 'start'], [xDiv - .3 * rem, diaMes(hs[hs.length - 1].data), 'end'], [R, 'Próximo pregão', 'end']].forEach(function (p) {
       h += '<text x="' + p[0] + '" y="' + (B + 1.2 * rem) + '" text-anchor="' + p[2] + '" fill="var(--faint)" font-size="' + .62 * rem + '"' + FONT + '>' + p[1] + '</text>';
@@ -624,27 +624,26 @@ function iniciar(D, E) {
   // ---- Preenchimento ----
   function preencher() {
     if (!D) { desenharAnel('gauge', 0, '—', 'σ diário'); desenharAnel('donutStop', 0, '—', 'acerto'); desenharLinhas(); desenharLigacoes(); return; }
-    var Ln = D.linhas, W = D.win, S = D.sigma, X = D.estrutura, BT = D.backtest;
+    var Ln = D.linhas, W = D.win, S = D.sigma, X = D.estrutura;
+    // Teste previo do gatilho (Modelo Regioes, RELATORIO secao 26): falso rompimento, 5 min, alvo 600, 0 a 0 em +200. Ainda em validacao no WIN.
+    var GT = { acerto: 62, ganhoMedio: 382, perdaMedia: 122, operacoes: 13, total: 2441, base: 'Ibovespa 5 min, set–nov/2026' };
     var curto = function (o) { return o.replace('Faixa de volatilidade', 'faixa de volatilidade').replace('Maxima', 'máxima').replace('Minima', 'mínima').replace('pregoes', 'pregões').replace('pregao', 'pregão'); };
     $('venda').textContent = fmtInt.format(Ln.venda); $('vendaC').textContent = sinalPts(Ln.venda - Ln.centro);
-    $('vendaT').textContent = 'stop ' + fmtInt.format(Ln.stopVenda) + ' · ' + curto(Ln.origemVenda);
+    $('vendaT').textContent = 'limite ' + fmtInt.format(Ln.stopVenda) + ' · ' + curto(Ln.origemVenda);
     $('compra').textContent = fmtInt.format(Ln.compra); $('compraC').textContent = sinalPts(Ln.compra - Ln.centro);
-    $('compraT').textContent = 'stop ' + fmtInt.format(Ln.stopCompra) + ' · ' + curto(Ln.origemCompra);
+    $('compraT').textContent = 'limite ' + fmtInt.format(Ln.stopCompra) + ' · ' + curto(Ln.origemCompra);
     $('centro').textContent = fmtInt.format(Ln.centro);
     $('sigChip').textContent = 'σ ' + fmt2.format(S.pct) + '%';
     $('centroT').textContent = 'Pregão de ' + dataBR(W.dataPregao) + ' · máx. ' + fmtInt.format(W.maxima) + ' · mín. ' + fmtInt.format(W.minima);
     $('contrato').textContent = W.simbolo;
     $('contratoInfo').textContent = 'venc. ' + diaMes(W.vencimento) + ' · B3';
     $('tipVal').textContent = diaMes(D.pregaoAlvo); $('tipChip').textContent = 'σ ' + fmtInt.format(S.pts) + ' pts';
-    var meio = Ln.meio || Math.round((Ln.venda + Ln.compra) / 2 / 5) * 5;   // referência do filtro das 9h, como no backtest
-    $('rCentro1').textContent = fmtInt.format(meio);
     desenharAnel('gauge', S.pct / 3, fmt2.format(S.pct) + '%', 'σ diário');
     $('sigPts').textContent = fmtInt.format(S.pts) + ' pts';
     $('dist').textContent = fmtInt.format(Ln.venda - Ln.centro) + ' / ' + fmtInt.format(Ln.centro - Ln.compra);
     $('distInfo').textContent = 'Venda / compra até o centro · 0,55σ = ' + fmtInt.format(.55 * S.pts) + ' pts';
-    desenharAnel('donutStop', BT.acerto / 100, fmtInt.format(BT.acerto) + '%', 'acerto');
-    $('stopPts').textContent = fmtInt.format(Ln.stopPts) + ' pts';
-    $('btInfo').textContent = 'Ganho médio ' + fmtInt.format(BT.ganhoMedio) + ' · perda média ' + fmtInt.format(BT.perdaMedia) + ' pts · ' + BT.operacoes + ' operações';
+    desenharAnel('donutStop', GT.acerto / 100, fmtInt.format(GT.acerto) + '%', 'acerto');
+    $('btInfo').textContent = 'Ganho médio ' + GT.ganhoMedio + ' · perda média ' + GT.perdaMedia + ' pts · ' + GT.operacoes + ' operações · ' + GT.base;
     // fluxo
     $('fData').textContent = diaMes(W.dataPregao); $('fFech').textContent = fmtInt.format(W.fechamento);
     $('fAmp').textContent = fmt2.format(S.pct) + '%';
@@ -664,16 +663,15 @@ function iniciar(D, E) {
     $('dCp').textContent = sinalPts(Ln.compra - Ln.centro) + ' vs centro'; $('dSc').textContent = '−' + fmtInt.format(Ln.stopPts) + ' da compra';
     desenharSpark('sparkMax', D.historico.map(function (c) { return c.maxima; }), Ln.venda, 'var(--down)');
     desenharSpark('sparkMin', D.historico.map(function (c) { return c.minima; }), Ln.compra, 'var(--up)');
-    var anos = Object.keys(BT.anos).map(function (a) { return a + ' ' + sinalPts(BT.anos[a]).replace(' pts', ''); }).join(' · ');
     $('fonte').innerHTML = 'Coletado em ' + dataBR(D.coletadoEm) + ' · <a href="' + W.url + '" target="_blank" rel="noopener">Boletim diário da B3</a> (fechamento, máximas e mínimas do contrato mais negociado)' +
-      ' · Backtest ' + BT.periodo + ': ' + BT.operacoes + ' operações, acerto ' + fmtInt.format(BT.acerto) + '%, +' + BT.mediaOp + ' pts por operação, pior queda ' + fmtInt.format(BT.piorQueda) + ' pts (' + anos + ').' +
-      '<br>' + (D.ticks ? 'Alvo fixo em pontos ainda em teste: dados tick a tick guardados ' + D.ticks.pregoes + ' de ' + D.ticks.meta + ' pregões. ' : '') + 'Referência, não recomendação de investimento.';
+      ' · Gatilho em teste: ' + GT.operacoes + ' operações (' + GT.base + '), acerto ' + GT.acerto + '%, ' + sinalPts(GT.total) + '. Amostra pequena: use no simulador até validar.' +
+      '<br>' + (D.ticks ? 'Validação no WIN: dados tick a tick guardados ' + D.ticks.pregoes + ' de ' + D.ticks.meta + ' pregões. ' : '') + 'Referência, não recomendação de investimento.';
     desenharLinhas(); desenharLigacoes();
   }
   $('copiar').addEventListener('click', function () {
     if (!D) return;
     var Ln = D.linhas;
-    var t = 'STOP V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | STOP C ' + fmtInt.format(Ln.stopCompra) + ' | FILTRO 9H (meio) ' + fmtInt.format(Ln.meio || Math.round((Ln.venda + Ln.compra) / 2 / 5) * 5);
+    var t = 'LIMITE V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | LIMITE C ' + fmtInt.format(Ln.stopCompra) + ' | GATILHO falso rompimento 5 min, alvo 600, 0 a 0 em +200';
     var ok = function () { $('copiar').textContent = 'Copiado'; setTimeout(function () { $('copiar').textContent = 'Copiar linhas'; }, 1500); };
     if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { prompt('Copie:', t); }); else prompt('Copie:', t);
   });
