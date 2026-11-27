@@ -113,6 +113,8 @@
   .ontem b { font-size: 1.05rem; font-weight: 500; }
   .ontem span { font-size: .6rem; color: var(--faint); }
   .chart-wrap { position: relative; flex: 1; min-height: 0; margin-top: .4rem; }
+  .nota-graf { flex: none; margin: .35rem 0 0; font-size: .64rem; line-height: 1.35; color: var(--faint); }
+  .nota-graf b { color: var(--fg); font-weight: 600; }
   .chart-wrap svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .tip { position: absolute; top: 0; transform: translateX(-50%); background: rgba(20, 20, 20, .94); border: 1px solid var(--line-2);
          border-radius: .6rem; padding: .3rem .55rem; white-space: nowrap; box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .6); pointer-events: none;
@@ -364,7 +366,7 @@
   <div class="head" id="c-painel">
     <div>
       <h1>Linhas institucionais de hoje</h1>
-      <p>Regiões de atenção do Mini Índice: venda (resistência) e compra (suporte), calculadas com o boletim da B3 antes da abertura. Entrada só com o gatilho de falso rompimento no gráfico de 5 minutos.</p>
+      <p>Regiões de entrada do Mini Índice: venda (resistência) e compra (suporte), calculadas com o boletim da B3 antes da abertura. Não são ordens: a entrada acontece no falso rompimento da região, no gráfico de 5 minutos.</p>
     </div>
     <div class="acoes">
       <span class="pill"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3"/></svg><span id="hoje"></span></span>
@@ -375,9 +377,9 @@
   <div id="aviso" class="aviso" hidden></div>
 
   <div class="regra" id="regra">
-    <span class="passo"><span class="n">1</span><span><b>Não deixe ordem nas linhas</b>: são regiões de atenção. Acompanhe o gráfico de <b>5 min</b>. Se o pregão abrir além de uma linha, ignore aquela região no dia.</span></span>
-    <span class="passo"><span class="n">2</span><span><b>Gatilho (falso rompimento)</b>: um candle <b>fecha além da linha</b> e, em até 2 candles, outro <b>fecha de volta</b> para dentro → entre <b>a mercado no fechamento desse candle</b>, não no pavio. <b>Stop</b> 1 tick além do pavio (extremo) do rompimento. <b>Atenção:</b> antes de o candle fechar não há sinal; ordem no pavio ou na linha não foi testada.</span></span>
-    <span class="passo"><span class="n">3</span><span><b>Alvo 600 pts</b>. Stop móvel: <b>0 a 0 em +200</b>, depois protege +100 a cada +100 (+300 → 100, +400 → 200, +500 → 300). Uma entrada por região no dia; nada depois de 17h30.</span></span>
+    <span class="passo"><span class="n">1</span><span><b>Entrada na venda</b> (região de cima): no gráfico de <b>5 min</b>, um candle fecha <b>acima</b> da linha e, em até 2 candles, outro fecha de volta <b>abaixo</b> → venda <b>no fechamento desse candle</b>, não no pavio.</span></span>
+    <span class="passo"><span class="n">2</span><span><b>Entrada na compra</b> (região de baixo): o espelho → um candle fecha <b>abaixo</b> da linha e outro fecha de volta <b>acima</b> → compra <b>no fechamento</b>.</span></span>
+    <span class="passo"><span class="n">3</span><span><b>Stop</b>: 1 tick além do <b>pavio do rompimento</b>, no <b>máximo 600 pts</b> da entrada (pavio mais longe → stop a 600). <b>Alvo 600</b>; stop no <b>0 a 0 em +200</b>, depois +100 a cada +100.</span></span>
   </div>
 
   <div class="kpis">
@@ -407,6 +409,7 @@
         <svg id="chart" role="img" aria-label="Últimos pregões e as regiões de venda e compra do próximo pregão, com os limites"></svg>
         <div class="tip" id="tip" hidden>Pregão<b id="tipVal"></b><span class="chip" id="tipChip"></span></div>
       </div>
+      <p class="nota-graf">Cada candle é um pregão inteiro (não 5 min). À direita, as linhas do próximo pregão: <b>Venda</b> e <b>Compra</b> são as regiões de entrada; o <b>Limite</b> (0,50σ além) mostra onde o rompimento deixa de ser falso: é referência, <b>não é o stop</b>.</p>
     </section>
 
     <section class="card donut" id="c-taxa" aria-labelledby="t-taxa">
@@ -422,7 +425,7 @@
       <p class="c-title" id="t-stop">Gatilho · teste prévio (5 min)</p>
       <svg id="donutStop" viewBox="0 0 160 160" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="t-stop"></svg>
       <div class="legenda">
-        <div><span><span class="marca m-white"></span>Stop</span><b>Extremo + 1 tick</b><span class="info">Além da máxima (venda) ou mínima (compra) do rompimento · 0 a 0 em +200</span></div>
+        <div><span><span class="marca m-white"></span>Stop</span><b>Pavio + 1 tick</b><span class="info">Além da máxima (venda) ou mínima (compra) do rompimento · no máximo 600 pts · 0 a 0 em +200</span></div>
         <div><span><span class="marca m-blue"></span>Alvo</span><b>600 pts</b><span class="info" id="btInfo"></span></div>
       </div>
     </section>
@@ -671,7 +674,7 @@ function iniciar(D, E) {
   $('copiar').addEventListener('click', function () {
     if (!D) return;
     var Ln = D.linhas;
-    var t = 'LIMITE V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | LIMITE C ' + fmtInt.format(Ln.stopCompra) + ' | GATILHO falso rompimento 5 min, alvo 600, 0 a 0 em +200';
+    var t = 'LIMITE V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | LIMITE C ' + fmtInt.format(Ln.stopCompra) + ' | ENTRADA no fechamento do falso rompimento (5 min) | STOP pavio + 1 tick, max 600 | ALVO 600 | 0 a 0 em +200';
     var ok = function () { $('copiar').textContent = 'Copiado'; setTimeout(function () { $('copiar').textContent = 'Copiar linhas'; }, 1500); };
     if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { prompt('Copie:', t); }); else prompt('Copie:', t);
   });
