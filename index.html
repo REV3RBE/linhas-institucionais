@@ -379,7 +379,7 @@
   <div class="regra" id="regra">
     <span class="passo"><span class="n">1</span><span><b>Entrada na venda</b> (região de cima): no gráfico de <b>5 min</b>, um candle fecha <b>acima</b> da linha e, em até 2 candles, outro fecha de volta <b>abaixo</b> → venda <b>no fechamento desse candle</b>, não no pavio.</span></span>
     <span class="passo"><span class="n">2</span><span><b>Entrada na compra</b> (região de baixo): o espelho → um candle fecha <b>abaixo</b> da linha e outro fecha de volta <b>acima</b> → compra <b>no fechamento</b>.</span></span>
-    <span class="passo"><span class="n">3</span><span><b>Stop</b>: 1 tick além do <b>pavio do rompimento</b>, no <b>máximo 600 pts</b> da entrada (pavio mais longe → stop a 600). <b>Alvo 600</b>; stop no <b>0 a 0 em +200</b>, depois +100 a cada +100.</span></span>
+    <span class="passo"><span class="n">3</span><span><b>Stop</b>: 1 tick além do <b>pavio do rompimento</b>, no <b>máximo 600 pts</b> da entrada (pavio mais longe → stop a 600). <b>Alvo 600</b>. <b>Stop fixo</b>: não mova o stop até o alvo ou o stop.</span></span>
   </div>
 
   <div class="kpis">
@@ -425,7 +425,7 @@
       <p class="c-title" id="t-stop">Gatilho · teste prévio (5 min)</p>
       <svg id="donutStop" viewBox="0 0 160 160" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="t-stop"></svg>
       <div class="legenda">
-        <div><span><span class="marca m-white"></span>Stop</span><b>Pavio + 1 tick</b><span class="info">Além da máxima (venda) ou mínima (compra) do rompimento · no máximo 600 pts · 0 a 0 em +200</span></div>
+        <div><span><span class="marca m-white"></span>Stop</span><b>Pavio + 1 tick</b><span class="info">Além da máxima (venda) ou mínima (compra) do rompimento · no máximo 600 pts · fixo, sem stop móvel</span></div>
         <div><span><span class="marca m-blue"></span>Alvo</span><b>600 pts</b><span class="info" id="btInfo"></span></div>
       </div>
     </section>
@@ -628,8 +628,8 @@ function iniciar(D, E) {
   function preencher() {
     if (!D) { desenharAnel('gauge', 0, '—', 'σ diário'); desenharAnel('donutStop', 0, '—', 'acerto'); desenharLinhas(); desenharLigacoes(); return; }
     var Ln = D.linhas, W = D.win, S = D.sigma, X = D.estrutura;
-    // Teste previo do gatilho (Modelo Regioes, RELATORIO secao 26): falso rompimento, 5 min, alvo 600, 0 a 0 em +200. Ainda em validacao no WIN.
-    var GT = { acerto: 62, ganhoMedio: 382, perdaMedia: 122, operacoes: 13, total: 2441, base: 'Ibovespa 5 min, set–nov/2026' };
+    // Teste previo do gatilho (Modelo Regioes, RELATORIO secao 28): falso rompimento, 5 min, alvo 600, stop no pavio (max 600) fixo. Ainda em validacao no WIN.
+    var GT = { acerto: 69, ganhoMedio: 583, perdaMedia: 251, operacoes: 13, total: 4244, base: 'Ibovespa 5 min, set–nov/2026' };
     var curto = function (o) { return o.replace('Faixa de volatilidade', 'faixa de volatilidade').replace('Maxima', 'máxima').replace('Minima', 'mínima').replace('pregoes', 'pregões').replace('pregao', 'pregão'); };
     $('venda').textContent = fmtInt.format(Ln.venda); $('vendaC').textContent = sinalPts(Ln.venda - Ln.centro);
     $('vendaT').textContent = 'limite ' + fmtInt.format(Ln.stopVenda) + ' · ' + curto(Ln.origemVenda);
@@ -674,7 +674,7 @@ function iniciar(D, E) {
   $('copiar').addEventListener('click', function () {
     if (!D) return;
     var Ln = D.linhas;
-    var t = 'LIMITE V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | LIMITE C ' + fmtInt.format(Ln.stopCompra) + ' | ENTRADA no fechamento do falso rompimento (5 min) | STOP pavio + 1 tick, max 600 | ALVO 600 | 0 a 0 em +200';
+    var t = 'LIMITE V ' + fmtInt.format(Ln.stopVenda) + ' | VENDA ' + fmtInt.format(Ln.venda) + ' | COMPRA ' + fmtInt.format(Ln.compra) + ' | LIMITE C ' + fmtInt.format(Ln.stopCompra) + ' | ENTRADA no fechamento do falso rompimento (5 min) | STOP pavio + 1 tick, max 600 | ALVO 600 | STOP FIXO';
     var ok = function () { $('copiar').textContent = 'Copiado'; setTimeout(function () { $('copiar').textContent = 'Copiar linhas'; }, 1500); };
     if (navigator.clipboard) navigator.clipboard.writeText(t).then(ok, function () { prompt('Copie:', t); }); else prompt('Copie:', t);
   });
